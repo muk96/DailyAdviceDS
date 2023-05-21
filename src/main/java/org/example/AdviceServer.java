@@ -14,18 +14,17 @@ public class AdviceServer {
         try(ServerSocket serverSock = new ServerSocket(portNo)) {
             while(true) {
                 Socket sock = serverSock.accept();
-                PrintWriter printWriter= new PrintWriter(sock.getOutputStream());
-                printWriter.println(getAdvice());
-
-                printWriter.flush();
-                printWriter.close();
+                Advice advice = new Advice(sock);
+                Advice.adviceServer = this;
+                Thread t = new Thread(advice);
+                t.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private String getAdvice() {
+    public String getAdvice() {
         int random = (int) (Math.random() * adviceList.length);
         return adviceList[random];
     }
