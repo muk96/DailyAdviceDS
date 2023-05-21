@@ -1,5 +1,7 @@
 package org.example;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
 
@@ -9,20 +11,17 @@ public class AdviceServer {
 
     int portNo = 12345;
     public void go() {
-        try {
-            ServerSocket serverSock = new ServerSocket(portNo);
-
+        try(ServerSocket serverSock = new ServerSocket(portNo)) {
             while(true) {
                 Socket sock = serverSock.accept();
-
-                PrintWriter printWriter = new PrintWriter(sock.getOutputStream());
+                PrintWriter printWriter= new PrintWriter(sock.getOutputStream());
                 printWriter.println(getAdvice());
 
+                printWriter.flush();
                 printWriter.close();
             }
-
         } catch (IOException e) {
-            System.out.println("IO exception occurred. Please check if the port no. is available.");
+            e.printStackTrace();
         }
     }
 
